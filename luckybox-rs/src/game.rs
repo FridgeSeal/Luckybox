@@ -22,8 +22,16 @@ impl GameState {
         self.players.get_mut(self.player_idx)
     }
 
+    // pub fn get_non_current_player(&mut self) -> Option<&mut Player> {
+    //     self.players.get_mut(self.get_other_player_idx())
+    // }
+
+    fn get_other_player_idx(&self) -> usize {
+        (self.player_idx + 1) % 2
+    }
+
     fn swap_current_player(&mut self) {
-        self.player_idx = (self.player_idx + 1) % 2;
+        self.player_idx = self.get_other_player_idx();
     }
 
     pub fn end_turn(&mut self) {

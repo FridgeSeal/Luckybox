@@ -31,6 +31,7 @@ impl GameState {
     }
 }
 
+#[derive(Debug)]
 pub struct Player {
     pub name: String,
     pub score_arrays: [[usize; 3]; 3],
@@ -65,7 +66,7 @@ impl Player {
         self.score_arrays
             .into_iter()
             .enumerate()
-            .filter(|(i, col)| self.col_has_space(*col))
+            .filter(|(_i, col)| self.col_has_space(*col))
             .map(|(i, _)| i)
             .collect_vec()
     }

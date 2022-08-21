@@ -74,6 +74,14 @@ impl Player {
         self.valid_cols().is_empty()
     }
 
+    pub fn pretty_print_score_row(&self, row: usize) -> [usize; 3] {
+        [
+            self.score_arrays[0][row],
+            self.score_arrays[1][row],
+            self.score_arrays[2][row],
+        ]
+    }
+
     pub fn add_score_array(&mut self, idx: usize, new_score_arr: [usize; 3]) {
         self.score_arrays[idx] = new_score_arr;
     }
@@ -88,7 +96,7 @@ impl Player {
             .sum()
     }
 
-    fn calculate_all_col_scores(&self) -> [usize; 3] {
+    pub fn calculate_all_col_scores(&self) -> [usize; 3] {
         self.score_arrays.map(|s| Player::calculate_column_score(s))
     }
     fn calculate_total_score(&self) -> usize {

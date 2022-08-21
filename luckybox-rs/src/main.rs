@@ -37,6 +37,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         current_player
             .add_dice_roll(col, dice_roll)
             .expect("How even");
+        let mut score_table = Table::new();
+        score_table
+            .load_preset(comfy_table::presets::UTF8_FULL)
+            .apply_modifier(comfy_table::modifiers::UTF8_ROUND_CORNERS)
+            .set_content_arrangement(comfy_table::ContentArrangement::DynamicFullWidth)
+            .set_header(["Col1", "Col2", "Col3"])
+            .add_row(current_player.pretty_print_score_row(0))
+            .add_row(current_player.pretty_print_score_row(1))
+            .add_row(current_player.pretty_print_score_row(2))
+            .add_row(current_player.calculate_all_col_scores());
+        writeln!(stdout, "{}", score_table)?;
         game_state.end_turn();
     }
     Ok(())

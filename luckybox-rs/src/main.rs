@@ -1,5 +1,7 @@
 use std::io::{self, Stdin, Stdout, Write};
 mod game;
+use comfy_table::{self, Table};
+// use tabled::{Header, Rotate, Style, TableIteratorExt};
 
 pub const COLUMN_COUNT: u8 = 3;
 
@@ -20,6 +22,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         stdout.flush()?;
         stdin.read_line(&mut input)?;
         player.add_name(input.trim_end());
+        input.clear();
     }
     input.clear();
     while !game_state.is_complete() {
@@ -30,7 +33,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "It's your turn {} - you've rolled a {dice_roll} 🎲",
             current_player.name
         )?;
-        writeln!(stdout, "What column do you want to put it in? ")?;
+        write!(stdout, "What column do you want to put it in? ")?;
         stdout.flush()?;
         let non_empty_cols = current_player.valid_cols();
         let col = handle_column_input(&stdin, &mut stdout, &mut input, &non_empty_cols)?;
@@ -63,8 +66,19 @@ fn handle_column_input(
         buffer.clear();
         stdin.read_line(buffer)?;
         match buffer.trim().parse::<usize>() {
-            Ok(number) if valid_cols.contains(&number) => return Ok(number),
-            Ok(_) | Err(_) => {
+            Ok(number) => {
+                let norm_number = number - 1;
+                if (norm_number <= 2) && valid_cols.contains(&norm_number) {
+                    return Ok(norm_number);
+                } else {
+                    writeln!(
+                    stdout,
+                    "Please only enter a number between 1 and 3 inclusive and whos column isn't full"
+                )?;
+                    continue;
+                }
+            }
+            Err(_) => {
                 writeln!(
                     stdout,
                     "Please only enter a number between 1 and 3 inclusive"
